@@ -1,0 +1,25 @@
+{
+  "name": "advent-of-code-2024",
+  "version": "1.0.0",
+  "description": "Advent of Code 2024 JavaScript solutions",
+  "main": "index.js",
+  "scripts": {
+    "solve": "node",
+    "watch": "onchange -i -k '*.js' -- node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rubnvp/advent-of-code-2024.git"
+  },
+  "author": "rubnvp",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rubnvp/advent-of-code-2024/issues"
+  },
+  "homepage": "https://github.com/rubnvp/advent-of-code-2024#readme",
+  "devDependencies": {
+    "onchange": "^7.1.0"
+  }
+}
