@@ -6,6 +6,7 @@
   "scripts": {
     "solve": "node",
     "watch": "onchange -i -k '*.js' -- node",
+    "create-day": "cp ./dayXX_template.js ./day${DAY}.js && sed -i '' -e \"s/XX/${DAY}/g\" ./day${DAY}.js && touch ./inputs/day${DAY}.txt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "type": "module",

@@ -1,10 +1,9 @@
 import { readFileSync } from 'fs';
-const DAY = 'XX';
 console.time('✨ Done in');
-console.log(`--- Day${DAY} ---`);
+console.log('--- DayXX ---');
 
 const inputText = false // use input from .txt
-  ? readFileSync(`./inputs/day${DAY}.txt`, {encoding:'utf8'})
+  ? readFileSync('./inputs/dayXX.txt', {encoding:'utf8'})
   : /* test input */`
 
 `;
