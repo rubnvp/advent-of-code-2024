@@ -2,11 +2,10 @@ import { readFileSync } from 'fs';
 console.time('✨ Done in');
 console.log('--- DayXX ---');
 
-const inputText = false // use input from .txt
-  ? readFileSync('./inputs/dayXX.txt', {encoding:'utf8'})
-  : /* test input */`
+let inputText = /* test input */`
 
 `;
+// inputText = readFileSync('./inputs/dayXX.txt', {encoding:'utf8'});
 
 function parseInput(inputText) {
   return inputText.trim();
