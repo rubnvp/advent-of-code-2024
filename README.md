@@ -3,7 +3,7 @@
 
 ### Create files for a day
 ```console
-DAY=05 npm run create-day
+DAY=01 npm run create-day
 ```
 
 ### Solve a day
