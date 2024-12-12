@@ -37,18 +37,19 @@ function solve2(stones) {
   // const BLINKS = 75;
   for (let blink = 0; blink < 37; blink++) {
     console.log('Blink:', blink, 'Stones:', stones.length);
-    stones = stones.reduce((stones, num) => {
-      const stoneString = num.toString();
-      if (num === 0) {
-        stones.push(1);
-      } else if (stoneString.length % 2 === 0) {
-        stones.push(Number(stoneString.slice(0, stoneString.length / 2)));
-        stones.push(Number(stoneString.slice(stoneString.length / 2)));
-      } else {
-        stones.push(num * 2024);
-      }
-      return stones;
-    }, []);
+    stones = stones.reduce(stonesReducer, []);
+  }
+  function stonesReducer(stones, num) {
+    const stoneString = num.toString();
+    if (num === 0) {
+      stones.push(1);
+    } else if (stoneString.length % 2 === 0) {
+      stones.push(Number(stoneString.slice(0, stoneString.length / 2)));
+      stones.push(Number(stoneString.slice(stoneString.length / 2)));
+    } else {
+      stones.push(num * 2024);
+    }
+    return stones;
   }
   const memo ={};
   let totalCount = 0;
@@ -58,18 +59,7 @@ function solve2(stones) {
     let miniBranch = [seedStone];
     if (!memo[seedStone]) {
       for (let blink = 37; blink < 75; blink++) {
-        miniBranch = miniBranch.reduce((stones, num) => {
-          const stoneString = num.toString();
-          if (num === 0) {
-            stones.push(1);
-          } else if (stoneString.length % 2 === 0) {
-            stones.push(Number(stoneString.slice(0, stoneString.length / 2)));
-            stones.push(Number(stoneString.slice(stoneString.length / 2)));
-          } else {
-            stones.push(num * 2024);
-          }
-          return stones;
-        }, []);
+        miniBranch = miniBranch.reduce(stonesReducer, []);
       }
       memo[seedStone] = miniBranch.length;
     }
