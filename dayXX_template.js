@@ -5,7 +5,7 @@ console.log('--- DayXX ---');
 let inputText = /* test input */`
 
 `;
-// inputText = readFileSync('./inputs/dayXX.txt', {encoding:'utf8'});
+// inputText = readFileSync('./inputs/dayXX.txt', {encoding:'utf8'}); // use input from file
 
 function parseInput(inputText) {
   return inputText.trim();
