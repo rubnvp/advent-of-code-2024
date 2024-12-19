@@ -43,16 +43,19 @@ function solve1({ maze, start, end }) {
   const COST_TURN = 1000;
   let minCost = Infinity;
   let minPath;
+  const walkedAt = {};
   function walkPath(x, y, direction, path, cost, lastX, lastY) {
     path.add(`${x},${y}`);
     cost += COST_FOWARD;
     const newDirection = getDirection(lastX, lastY, x, y);
     if (direction !== newDirection) cost += COST_TURN;
+    if (walkedAt[`${x},${y},${direction}`] <= cost) return;
+    walkedAt[`${x},${y},${direction}`] = cost;
     if (cost >= minCost) return;
     if (x === end.x && y === end.y) {
       minCost = cost;
       minPath = path;
-      console.log('New min cost:', minCost, 'calculated in', (Date.now() - timeStart) / 1000, 'seconds');
+      // console.log('New min cost:', minCost, 'calculated in', (Date.now() - timeStart) / 1000, 'seconds');
       return;
     }
     let wallsAround = 0;
