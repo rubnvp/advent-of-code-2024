@@ -38,7 +38,7 @@ function parseInput(inputText) {
 }
 
 function solve1({ maze, start, end }) {
-  const timeStart = Date.now();
+  // const timeStart = Date.now();
   const COST_FOWARD = 1;
   const COST_TURN = 1000;
   let minCost = Infinity;
@@ -82,10 +82,43 @@ function solve1({ maze, start, end }) {
 }
 
 function solve2({ maze, start, end }) {
-  return input;
+  const COST_FOWARD = 1;
+  const COST_TURN = 1000;
+  const endingPaths = [];
+  const walkedAt = {};
+  function walkPath(x, y, direction, path, cost, lastX, lastY) {
+    path.push(`${x},${y}`);
+    cost += COST_FOWARD;
+    const newDirection = getDirection(lastX, lastY, x, y);
+    if (direction !== newDirection) cost += COST_TURN;
+    if (walkedAt[`${x},${y},${direction}`] < cost) return;
+    walkedAt[`${x},${y},${direction}`] = cost;
+    if (x === end.x && y === end.y) {
+      endingPaths.push({path, cost});
+      return;
+    }
+    if (maze[y-1][x] !== '#' && !path.includes(`${x},${y-1}`)) walkPath(x, y-1, newDirection, [...path], cost, x, y);
+    if (maze[y+1][x] !== '#' && !path.includes(`${x},${y+1}`)) walkPath(x, y+1, newDirection, [...path], cost, x, y);
+    if (maze[y][x-1] !== '#' && !path.includes(`${x-1},${y}`)) walkPath(x-1, y, newDirection, [...path], cost, x, y);
+    if (maze[y][x+1] !== '#' && !path.includes(`${x+1},${y}`)) walkPath(x+1, y, newDirection, [...path], cost, x, y);
+  }
+  function getDirection(x1, y1, x2, y2) {
+    if (x1 === undefined || y1 === undefined) return 'RIGHT';
+    if (x1 === x2) {
+      return y2 > y1 ? 'DOWN' : 'UP';
+    } else {
+      return x2 > x1 ? 'RIGHT' : 'LEFT';
+    }
+  }
+  walkPath(start.x, start.y, 'RIGHT', [], -COST_FOWARD);
+  const minCost = endingPaths.reduce((min, {cost}) => Math.min(min, cost), Infinity);
+  return endingPaths
+    .filter(({cost}) => cost === minCost)
+    .reduce((acc, {path}) => new Set([...acc, ...path]), [])
+    .size;
 }
 
 const input = parseInput(inputText);
-console.log('Solution 1:', solve1(input));
-// console.log('Solution 2:', solve2(input));
+// console.log('Solution 1:', solve1(input));
+console.log('Solution 2:', solve2(input));
 console.timeEnd('✨ Done in');
