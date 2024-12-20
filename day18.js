@@ -29,54 +29,72 @@ let inputText = /* test input */`
 1,6
 2,0
 `;
-// inputText = readFileSync('./inputs/day18.txt', { encoding: 'utf8' }); // use input from file
+inputText = readFileSync('./inputs/day18.txt', { encoding: 'utf8' }); // use input from file
+const MATRIX_SIZE = 71;
+const FALLEN_BYTES = 1024;
 
-// const MATRIX_SIZE = 71;
-// const FALLEN_BYTES = 1024;
-const MATRIX_SIZE = 7;
-const FALLEN_BYTES = 12;
+// const MATRIX_SIZE = 7;
+// const FALLEN_BYTES = 12;
 
 function parseInput(inputText) {
   const matrix = Array.from({ length: MATRIX_SIZE }, () => Array(MATRIX_SIZE).fill('.'));
   const coordinates = inputText.trim()
     .split('\n')
-    .map(line => line.split(',').map(Number))
-    .slice(0, FALLEN_BYTES);
-  coordinates.forEach(([x, y]) => matrix[y][x] = '#');
-  return matrix;
+    .map(line => line.split(',').map(Number));
+  coordinates
+    .slice(0, FALLEN_BYTES)
+    .forEach(([x, y]) => matrix[y][x] = '#');
+  return { matrix, coordinates };
 }
 
-function solve1(matrix) {
+function solve1({ matrix }) {
+  matrix = JSON.parse(JSON.stringify(matrix));
   const END = MATRIX_SIZE - 1;
-
-  let minPathLength = Infinity;
-  const stack = [[0, 0, []]];
-
-  while (stack.length > 0) {
-    const [x, y, path] = stack.pop();
-    path.push(`${x},${y}`);
-
-    if (path.length >= minPathLength) continue;
-    if (x === END && y === END) {
-      minPathLength = Math.min(minPathLength, path.length);
-      console.log('New min path length:', minPathLength);
-      continue;
+  let steps = [[0, 0, 0]]; // x, y, count
+  let minPathLength = null;
+  matrix[0][0] = '*';
+  while (steps.length > 0) {
+    let nextSteps = [];
+    for (const [x, y, count] of steps) {
+      if (x === END && y === END) {
+        minPathLength = count;
+        nextSteps = [];
+        break;
+      }
+      if (matrix[y - 1]?.[x] === '.') {
+        matrix[y - 1][x] = '*';
+        nextSteps.push([x, y - 1, count + 1]);
+      }
+      if (matrix[y + 1]?.[x] === '.') {
+        matrix[y + 1][x] = '*';
+        nextSteps.push([x, y + 1, count + 1]);
+      }
+      if (matrix[y][x - 1] === '.') {
+        matrix[y][x - 1] = '*';
+        nextSteps.push([x - 1, y, count + 1]);
+      }
+      if (matrix[y][x + 1] === '.') {
+        matrix[y][x + 1] = '*';
+        nextSteps.push([x + 1, y, count + 1]);
+      }
     }
-
-    if (matrix[y - 1]?.[x] === '.' && !path.includes(`${x},${y - 1}`)) stack.push([x, y - 1, [...path]]);
-    if (matrix[y + 1]?.[x] === '.' && !path.includes(`${x},${y + 1}`)) stack.push([x, y + 1, [...path]]);
-    if (matrix[y][x - 1] === '.' && !path.includes(`${x - 1},${y}`)) stack.push([x - 1, y, [...path]]);
-    if (matrix[y][x + 1] === '.' && !path.includes(`${x + 1},${y}`)) stack.push([x + 1, y, [...path]]);
+    steps = nextSteps;
   }
-
-  return minPathLength - 1;
+  return minPathLength;
 }
 
-function solve2(input) {
-  return input;
+function solve2({ matrix, coordinates }) {
+  for (let i = FALLEN_BYTES; i < coordinates.length; i++) {
+    const [x, y] = coordinates[i];
+    matrix[y][x] = '#';
+    if (solve1({ matrix }) === null) {
+      return `${x},${y}`;
+    }
+  }
+  return null;
 }
 
 const input = parseInput(inputText);
 console.log('Solution 1:', solve1(input));
-// console.log('Solution 2:', solve2(input));
+console.log('Solution 2:', solve2(input));
 console.timeEnd('✨ Done in');
